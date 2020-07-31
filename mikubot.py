@@ -38,7 +38,6 @@ def initScrims():
 
 initScrims()
 
-
 @client.event
 async def on_ready():
     print('Bot is ready')
@@ -69,22 +68,36 @@ async def addScrim(ctx,day,time,maps):
 @client.command()
 async def showSchedule(ctx):
     global currentScrims
-    await ctx.send("Current scrims are: ")
+    message = "Current scrims are:\n "
     for day in currentScrims.keys():
-        await ctx.send("**"+day+"**")
+        message = message+ ("**"+day+"**\n")
         for scrim in currentScrims[day]:
-            await ctx.send(scrim)
+            message = message+ scrim+"\n"
+    await ctx.send(message)
+
 @client.command()
 async def showScrims(ctx,day):
     global currentScrims
     day = day.upper()
-    await ctx.send("Scrims for "+day+" are:")
+    message = "Scrims for "+day+" are:\n"
     for scrim in currentScrims[day]:
-        await ctx.send(scrim)
+        message+=scrim
+        message+="\n"
+    await ctx.send(message)
 
 @client.command()
 async def clearScrims(ctx, certainty):
+    global currentScrims
     if certainty == "YESSIR":
+        currentScrims = {
+        'MONDAY':[],
+        'TUESDAY':[],
+        'WEDNESDAY':[],
+        'THURSDAY':[],
+        'FRIDAY':[],
+        'SATURDAY':[],
+        'SUNDAY':[]
+        }
         open("sixesScrims.txt",'w').close()
         await ctx.send("File was cleared")
     else:

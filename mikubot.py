@@ -60,7 +60,7 @@ async def _rolldice(ctx):
 @client.command()
 async def addScrim(ctx,day,time,maps,contact,host):
     global currentScrims
-    statement = day +" "+time+" "+maps+" "+contact+" "+host
+    statement = day +" | "+time+" | "+maps+" | "+contact+" | "+host
     currentScrims[day.upper()].append(statement)
     await ctx.send("The scrim: "+statement+" was added to the schedule")
     refreshScrims()

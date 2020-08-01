@@ -86,6 +86,17 @@ async def showScrims(ctx,day):
     await ctx.send(message)
 
 @client.command()
+async def removeScrim(ctx,day,time):
+    global currentScrims
+    day = day.upper()
+    for scrim in currentScrims[day]:
+        if time in scrim:
+            await ctx.send("Removed "+scrim)
+            currentScrims[day].remove(scrim)
+            refreshScrims()
+
+
+@client.command()
 async def clearScrims(ctx, certainty):
     global currentScrims
     if certainty == "YESSIR":

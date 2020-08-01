@@ -36,6 +36,16 @@ def initScrims():
         currentScrims = ast.literal_eval(contents)
     scrimSheet.close()
 
+def checkOverlap(day,time):
+    global currentScrims
+    day = day.upper()
+    for a in currentScrims[day]:
+        currentTime = list(map(str,a.split(" ")))[2]
+        print(currentTime)
+        if currentTime == time:
+            return True
+    return False
+
 initScrims()
 
 @client.event
@@ -61,9 +71,12 @@ async def _rolldice(ctx):
 async def addScrim(ctx,day,time,maps,contact,host):
     global currentScrims
     statement = day +" | "+time+" | "+maps+" | "+contact+" | "+host
-    currentScrims[day.upper()].append(statement)
-    await ctx.send("The scrim: "+statement+" was added to the schedule")
-    refreshScrims()
+    if checkOverlap(day,time) == False:
+        currentScrims[day.upper()].append(statement)
+        await ctx.send("The scrim: "+statement+" was added to the schedule")
+        refreshScrims()
+    else:
+        await ctx.send("There is already a scrim at this time")
 
 @client.command()
 async def showSchedule(ctx):
@@ -95,6 +108,9 @@ async def removeScrim(ctx,day,time):
             currentScrims[day].remove(scrim)
             refreshScrims()
 
+# @client.command()
+# async def commands(ctx):
+#     await ctx.send("File was cleared")
 
 @client.command()
 async def clearScrims(ctx, certainty):

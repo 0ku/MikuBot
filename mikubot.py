@@ -58,9 +58,9 @@ async def _rolldice(ctx):
     await ctx.send("You rolled a "+ str(random.choice(responses)))
 
 @client.command()
-async def addScrim(ctx,day,time,maps):
+async def addScrim(ctx,day,time,maps,contact,host):
     global currentScrims
-    statement = day +" "+time+" "+maps
+    statement = day +" "+time+" "+maps+" "+contact+" "+host
     currentScrims[day.upper()].append(statement)
     await ctx.send("The scrim: "+statement+" was added to the schedule")
     refreshScrims()

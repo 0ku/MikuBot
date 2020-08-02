@@ -17,7 +17,7 @@ currentScrims = {
     'SATURDAY':[],
     'SUNDAY':[]
     }
-
+warnedScrims = []
 class Scrims(commands.Cog):
     def __init__(self,client):
         self.client = client
@@ -60,6 +60,7 @@ class Scrims(commands.Cog):
     @tasks.loop(seconds = 10)
     #@commands.command()
     async def remindScrims(self):
+        global warnedScrims
         global currentScrims
         x=localtime(time())
         desiredChannel = self.client.get_channel(725821726424039444)
@@ -78,9 +79,11 @@ class Scrims(commands.Cog):
             if formatTime == scrimTime:
                 await desiredChannel.send(f"{role.mention} Scrim right now!\n{scrim}")
                 currentScrims[weekDay].remove(scrim)
-            elif scrimTime == warnTime1:
+                warnedScrims.remove(scrim)
+            elif scrimTime == warnTime1 and scrim not in warnedScrims:
                 await desiredChannel.send(f"{role.mention} Scrim in 1 hour!\n{scrim}")
                 currentScrims[weekDay].remove(scrim)
+                warnedScrims.append(scrim)
 
     @commands.command(aliases = ['roll','rolldice'])
     async def _rolldice(self,ctx):

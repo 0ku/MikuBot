@@ -1,0 +1,1 @@
+{"MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": ["Friday - 930 - TBD - Inquisition - we", "Friday - 830 - TBD - noname - wehost"], "SATURDAY": ["saturday - 930 - product/steel:( - birbee - wehost", "saturday - 830 - Lakeside/Upward - Saltine_Crackers - Wehost"], "SUNDAY": ["sunday - 930 - TBD - Moi - theyhost"]}

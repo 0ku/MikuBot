@@ -18,9 +18,11 @@ currentScrims = {
     'SUNDAY':[]
     }
 warnedScrims = []
+weekDay = ""
 class Scrims(commands.Cog):
     def __init__(self,client):
         self.client = client
+        self.teamname = "Zipf's Law"
     
     def deleteScrims():
             open("sixesScrims.txt",'w').close()
@@ -54,14 +56,15 @@ class Scrims(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.remindScrims.start()
-
         print("Reminder was started")
+
 
     @tasks.loop(seconds = 10)
     #@commands.command()
     async def remindScrims(self):
         global warnedScrims
         global currentScrims
+        global weekDay
         x=localtime(time())
         desiredChannel = self.client.get_channel(725821726424039444)
         role = desiredChannel.guild.get_role(733822850846425190)
@@ -79,7 +82,8 @@ class Scrims(commands.Cog):
             if formatTime == scrimTime:
                 await desiredChannel.send(f"{role.mention} Scrim right now!\n{scrim}")
                 currentScrims[weekDay].remove(scrim)
-                warnedScrims.remove(scrim)
+                if scrim in warnedScrims:
+                    warnedScrims.remove(scrim)
             elif scrimTime == warnTime1 and scrim not in warnedScrims:
                 await desiredChannel.send(f"{role.mention} Scrim in 1 hour!\n{scrim}")
                 currentScrims[weekDay].remove(scrim)
@@ -89,6 +93,22 @@ class Scrims(commands.Cog):
     async def _rolldice(self,ctx):
         responses = [1,2,3,4,5,6]
         await ctx.send("You rolled a "+ str(random.choice(responses)))
+
+    @commands.command()
+    async def todaysScrim(self,ctx):
+        global currentScrims
+        global weekDay
+        print(weekDay)
+        scrimList = currentScrims[weekDay]
+        if len(scrimList) == 0:
+            await ctx.send("There are no scrims today!")
+        else:
+            message = "**Scrims for today**"
+            message+="```\n"
+            for scrim in scrimList:
+                message+=f"[{scrim}]\n"
+            message+="```"
+            await ctx.send(message)
 
     @commands.command(aliases = ['add','makeScrim'])
     async def addScrim(self,ctx,day,time,maps,contact,host):
@@ -104,12 +124,24 @@ class Scrims(commands.Cog):
     @commands.command(aliases = ['showAllScrims','showAll'])
     async def showSchedule(self,ctx):
         global currentScrims
-        message = "Current scrims are:\n "
+        check = False
+        embed = discord.Embed(
+            title = self.teamname,
+            description = "Scrims",
+            colour = discord.Colour.dark_purple() 
+        )
         for day in currentScrims.keys():
-            message = message+ ("**"+day+"**\n")
-            for scrim in currentScrims[day]:
-                message = message+ scrim+"\n"
-        await ctx.send(message)
+            if len(currentScrims[day]) > 0:
+                check = True
+                message = ""
+                for scrim in currentScrims[day]:
+                    message = message+ scrim+"\n"
+                embed.add_field(name = day,value = message,inline = False)
+        if check == False:
+            await ctx.send("There are no scrims at the moment")
+        else:
+            await ctx.send(embed=embed)
+
 
     @commands.command(aliases = ['scrims'])
     async def showScrims(self,ctx,day):

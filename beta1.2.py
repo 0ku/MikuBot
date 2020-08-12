@@ -134,4 +134,4 @@ async def clearScrims(ctx, certainty):
         await ctx.send("Confirmation denied")
 
 
-client.run('NjkzODkzMjI3MzgzODgxODY5.XoDsbQ.H3GNJKAhle8Aqm2I4cbhIj-5Lkg')
+client.run('')
